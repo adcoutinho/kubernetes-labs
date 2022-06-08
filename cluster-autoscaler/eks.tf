@@ -31,7 +31,6 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  # Required for Karpenter role below
   enable_irsa = true
 
   node_security_group_additional_rules = {
@@ -61,12 +60,6 @@ module "eks" {
       name = "default"
       selectors = [
         {
-          namespace = "backend"
-          labels = {
-            Application = "backend"
-          }
-        },
-        {
           namespace = "fargate"
           labels = {
             WorkerType = "fargate"
@@ -88,15 +81,24 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    default = {
-      instance_types = ["t3.medium"]
+    eks-node = {
+      instance_types = local.instance_types
 
-      min_size     = 3
-      max_size     = 10
-      desired_size = 3
+      min_size     = local.min_size
+      max_size     = local.max_size
+      desired_size = local.desired_size
+
+      disk_size      = local.disk_size
+      capacity_type  = local.capacity_type
 
     }
+
+    tags = merge(local.tags, {
+      "k8s.io/cluster-autoscaler/enabled" = true,
+      "k8s.io/cluster-autoscaler/${local.cluster_name}" = "owned",
+    })
   }
 
   tags = local.tags
+  
 }

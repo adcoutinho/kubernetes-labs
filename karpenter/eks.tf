@@ -7,6 +7,7 @@ module "eks" {
   cluster_version = local.cluster_version
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
+  create_cloudwatch_log_group = false
 
   cluster_addons = {
     coredns = {

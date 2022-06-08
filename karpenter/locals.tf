@@ -9,13 +9,12 @@ locals {
 
   tags = {
     Env            = "test"
-    Team           = "infra-aws"
     System         = "kubernetes"
     SubSystem      = "eks"
     Documentation  = "CHANGE-ME"
     Tribe          = "platform"
     CreationOrigin = "Terraform"
     Repository     = "CHANGE-ME"
-    State          = "adriano-coutinho-bucket/kubernetes-labs/karpenter/terraform.tfstate"
+    State          = "CHANGE-ME/kubernetes-labs/karpenter/terraform.tfstate"
   }
 }

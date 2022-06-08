@@ -14,6 +14,6 @@ locals {
     Documentation  = "CHANGE-ME"
     CreationOrigin = "Terraform"
     Repository     = "https://github.com/adcoutinho/kubernetes-labs"
-    State          = "adriano-coutinho-bucket/kubernetes-labs/base-eks/terraform.tfstate"
+    State          = "CHANGE-ME/kubernetes-labs/base-eks/terraform.tfstate"
   }
 }

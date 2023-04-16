@@ -30,7 +30,9 @@ data "aws_iam_policy_document" "node" {
   }
 }
 
+##########################################################
 # IAM Addon ClusterAutoscaler Policy
+###########################################################
 data "aws_iam_policy_document" "clusterAutoscalerAssumeRole" {
   statement {
     sid     = "ClusterAutoscalerAssumeRole"

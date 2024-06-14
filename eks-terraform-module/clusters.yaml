@@ -1,0 +1,6 @@
+clusters:
+  tooling:
+    name: "tooling"
+    version: "1.27"
+    desired_size: 2
+    instance_types: "t3.large"

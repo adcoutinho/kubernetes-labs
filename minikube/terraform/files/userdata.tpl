@@ -1,3 +1,4 @@
+#!/bin/bash
 # userdata
 
 # Docker start
@@ -6,8 +7,9 @@ systemctl enable docker
 
 # Install Minikube
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-sudo install minikube-linux-amd64 /usr/local/bin/minikube
+install minikube-linux-amd64 /usr/local/bin/minikube
 
 # Start Minikube
-su - minikube
-minikube start --vm-driver=none --extra-config=kubelet.cgroup-driver=systemd
+minikube start --extra-config=kubelet.cgroup-driver=systemd
+
+minikube kubectl proxy --port=8080

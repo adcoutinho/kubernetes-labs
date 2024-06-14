@@ -12,6 +12,8 @@ locals {
   }
   ports = {
     port_443 = { port = 443, protocol = "tcp", cidrs = ["186.194.105.13/32"]}
+    port_8443 = { port = 8443, protocol = "tcp", cidrs = ["186.194.105.13/32"]}
+    port_8080 = { port = 8080, protocol = "tcp", cidrs = ["186.194.105.13/32"]}
   }
 
   tags = {

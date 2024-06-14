@@ -1,4 +1,5 @@
-resource "aws_spot_instance_request" "this" {
+resource "aws_instance" "this" {
+  subnet_id = local.subnet_id
 
   launch_template {
     id = aws_launch_template.this.id
@@ -10,7 +11,7 @@ resource "aws_launch_template" "this" {
   name = local.project
 
   block_device_mappings {
-    device_name = "/dev/sda"
+    device_name = "/dev/sda1"
 
     ebs {
       volume_size = local.block_device.volume_size
@@ -47,10 +48,10 @@ resource "aws_launch_template" "this" {
   }
 
   network_interfaces {
+    delete_on_termination = true
     associate_public_ip_address = local.associate_public_ip_address
+    security_groups = [aws_security_group.this.id]
   }
-
-  vpc_security_group_ids = [aws_security_group.this.id]
 
   tag_specifications {
     resource_type = "instance"

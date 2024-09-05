@@ -1,42 +1,42 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby : 
 
-Vagrant.configure("2") do |config|
-  config.vm.box_check_update = false
+ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
+
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box_check_update = false
+  config.vm.provision :shell, path: "bootstrap.sh"
+
+  # Kubernetes Master Node
   config.vm.define "master" do |master|
     master.vm.box = "ubuntu/mantic64"
-    master.vm.hostname = "master"
+    master.vm.hostname = "master.adclabs.com.br"
     master.vm.network "private_network", ip: "192.168.56.10"
     master.vm.provider "virtualbox" do |vb|
       vb.name = "master"
       vb.memory = "2048"
       vb.cpus = "2"
     end
-    master.vm.provision :shell, path: "bootstrap.sh"
-  end
-  config.vm.define "worker1" do |worker1|
-    worker1.vm.box = "ubuntu/mantic64"
-    worker1.vm.hostname = "worker1"
-    worker1.vm.network "private_network", ip: "192.168.56.11"
-    worker1.vm.provider "virtualbox" do |vb|
-      vb.name = "worker1"
-      vb.memory = "2048"
-      vb.cpus = "2"
-    end
-    worker1.vm.provision :shell, path: "bootstrap.sh"
-  end
-  config.vm.define "worker2" do |worker2|
-    worker2.vm.box = "ubuntu/mantic64"
-    worker2.vm.hostname = "worker2"
-    worker2.vm.network "private_network", ip: "192.168.56.12"
-    worker2.vm.provider "virtualbox" do |vb|
-      vb.name = "worker2"
-      vb.memory = "2048"
-      vb.cpus = "2"
-    end
-    worker2.vm.provision :shell, path: "bootstrap.sh"
+    master.vm.provision "shell", path: "bootstrap_master.sh"
   end
 
+  NodeCount = 1
+
+  # Kubernetes Worker Nodes
+  (1..NodeCount).each do |i|
+    config.vm.define "worker#{i}" do |workernode|
+      worker1.vm.box = "ubuntu/mantic64"
+      worker1.vm.hostname = "worker#{i}.adclabs.com.br"
+      worker1.vm.network "private_network", ip: "192.168.56.1#{i}"
+      worker1.vm.provider "virtualbox" do |vb|
+        vb.name = "worker#{i}"
+        vb.memory = "2048"
+        vb.cpus = "2"
+      end
+      workernode.vm.provision "shell", path: "bootstrap_worker.sh"
+    end
+  end
 end
-

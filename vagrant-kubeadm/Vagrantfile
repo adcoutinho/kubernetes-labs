@@ -5,35 +5,39 @@ ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box_check_update = false
+  config.vm.box                 = "ubuntu/jammy64"
+  config.vm.box_check_update    = false
+  config.vbguest.auto_update    = false
   config.vm.provision :shell, path: "bootstrap.sh"
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
   # Kubernetes Master Node
   config.vm.define "master" do |master|
-    master.vm.box = "ubuntu/mantic64"
     master.vm.hostname = "master.adclabs.com.br"
     master.vm.network "private_network", ip: "192.168.56.10"
     master.vm.provider "virtualbox" do |vb|
       vb.name = "master"
       vb.memory = "2048"
       vb.cpus = "2"
+      vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+      vb.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
     end
     master.vm.provision "shell", path: "bootstrap_master.sh"
   end
 
-  NodeCount = 1
+  NodeCount = 2
 
   # Kubernetes Worker Nodes
   (1..NodeCount).each do |i|
     config.vm.define "worker#{i}" do |workernode|
-      workernode.vm.box = "ubuntu/mantic64"
       workernode.vm.hostname = "worker#{i}.adclabs.com.br"
       workernode.vm.network "private_network", ip: "192.168.56.1#{i}"
       workernode.vm.provider "virtualbox" do |vb|
         vb.name = "worker#{i}"
         vb.memory = "2048"
         vb.cpus = "2"
+        vb.customize ["modifyvm", :id, "--uart1", "0x3F8", "4"]
+        vb.customize ["modifyvm", :id, "--uartmode1", "file", File::NULL]
       end
       workernode.vm.provision "shell", path: "bootstrap_worker.sh"
     end

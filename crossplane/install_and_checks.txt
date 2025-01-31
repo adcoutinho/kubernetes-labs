@@ -1,0 +1,25 @@
+## Install
+helm repo add crossplane-stable https://charts.crossplane.io/stable 
+helm repo update
+helm install crossplane crossplane-stable/crossplane --namespace crossplane-system --create-namespace
+
+## Checks
+kubectl get pods -n crossplane-system
+kubectl api-resources  | grep crossplane
+kubectl get crds | grep crossplane
+
+ - After install a provider like aws-s3, check if your providers are installed and healthy
+kubectl get providers
+
+ - Check new crds in the cluster
+kubectl get crds | grep upbound
+
+ - After create a bucket you could check if its ok (Ready: True Sync: True)
+kubectl get buckets
+
+ - Or delete it when not necessary anymore
+kubectl delete bucket <bucket-name>
+
+## Tested
+
+ - Changed a tag from env=lab to env=stg it takes more than 5 minutes do Crossplane reconciliate the tag bringing back the original value.

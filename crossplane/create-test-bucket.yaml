@@ -1,0 +1,12 @@
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  generateName: crossplane-coutinho-
+spec:
+  forProvider:
+    region: us-east-1
+    tags:
+      project: crossplane-adclab
+      env: lab
+  providerConfigRef:
+    name: aws-default-config

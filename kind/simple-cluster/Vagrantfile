@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi:set ft=ruby sw=2 ts=2 sts=2:
+
+BUILD_MODE = "BRIDGE"
+
+ENV['VAGRANT_NO_PARALLEL'] = 'yes'
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box                 = "ubuntu/jammy64"
+  config.vm.box_check_update    = false
+  config.vbguest.auto_update    = false
+  config.vm.boot_timeout        = 900
+  config.vm.provision :shell, path: "bootstrap.sh"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  config.vm.define "kind-cluster" do |kind|
+    kind.vm.hostname = "kind-cluster.adclabs.com.br"
+    kind.vm.network "private_network", ip: "192.168.56.24"
+    kind.vm.provider "virtualbox" do |vb|
+      vb.name = "kind-cluster"
+      vb.memory = "6144"
+      vb.cpus = "2"
+    end
+  end
+end
